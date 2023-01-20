@@ -3,7 +3,7 @@ from drawer import Drawer
 from model import Model
 
 class GameObject:
-    def initialise(self, x: float, y: float, z: float):
+    def translate(self, x: float, y: float, z: float):
         if self.model is not None:
             self.model.translate(x, y, z)
 
@@ -14,7 +14,7 @@ class GameObject:
         self.z: float = z
         self.model: Model = model
         self.drawers: list[Drawer] = drawers
-        self.initialise(x, y, z)
+        self.translate(x, y, z)
 
     def draw(self):
         if self.drawers is not None:

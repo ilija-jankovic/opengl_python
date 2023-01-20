@@ -8,24 +8,31 @@ from drawers.colour_drawer import ColourDrawer
 from drawers.line_drawer import LineDrawer
 
 from game_object import GameObject
+from map import Map
 from model import Model
 from model_data import ModelType, ModelData
+
+map = Map([
+    '  *  ',
+    '*****',
+    '  *  ',
+    '  *  ',
+])
 
 def on_pressed(window, key, scancode, action, mods):
     if action == glfw.PRESS:
         if key == glfw.KEY_RIGHT:
             gl.glTranslatef(-0.5, 0.0, 0.0)
+            player.translate(0.5, 0.0, 0.0)
         elif key == glfw.KEY_LEFT:
             gl.glTranslatef(0.5, 0.0, 0.0)
+            player.translate(-0.5, 0.0, 0.0)
         elif key == glfw.KEY_UP:
             gl.glTranslatef(0.0, -0.5, 0.0)
+            player.translate(0.0, 0.5, 0.0)
         elif key == glfw.KEY_DOWN:
             gl.glTranslatef(0.0, 0.5, 0.0)
-
-def _create_block(x: float):
-    data = ModelData.from_type(ModelType.Cube)
-    model = Model(data)
-    return GameObject(x=x, model=model, drawers=[LineDrawer(), ColourDrawer()])
+            player.translate(0.0, -0.5, 0.0)
 
 def main():
     # Initialize the library
@@ -49,7 +56,10 @@ def main():
 
     glfw.set_key_callback(window, on_pressed)
 
-    blocks = [_create_block(x) for x in range(-2, 3, 2)]
+    objs = map.create_game_objects(player_x=0, player_y=1);
+
+    global player
+    player = objs[len(objs)-1]
 
     # Loop until the user closes the window
     while not glfw.window_should_close(window):
@@ -57,10 +67,10 @@ def main():
 
         gl.glClear(gl.GL_COLOR_BUFFER_BIT|gl.GL_DEPTH_BUFFER_BIT)
 
-        for block in blocks:
-            block.draw()
+        for obj in objs:
+            obj.draw()
 
-        gl.glRotatef(1, 3, 1, 1)
+        #gl.glRotatef(1, 3, 1, 1)
 
         # Swap front and back buffers
         glfw.swap_buffers(window)

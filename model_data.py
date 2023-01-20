@@ -6,6 +6,7 @@ import copy
 
 class ModelType(Enum):
     Cube = 'cube'
+    Player = 'player'
 
 @dataclass
 class ModelData:
@@ -24,7 +25,9 @@ def _cache(type: ModelType):
     data: dict = json.load(f)
     f.close()
 
-    vertices = data.get('vertices')
+    # Normalise length between -1 and 1 to 1.
+    vertices = [[v[0]*0.5, v[1]*0.5, v[2]*0.5] for v in data.get('vertices')]
+
     edges = data.get('edges')
     colours = data.get('colours')
     surfaces = data.get('surfaces')
